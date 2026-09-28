@@ -16,6 +16,12 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
         environment: ${{ inputs.environment }}
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+            AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+            TF_VAR_gha_setup_file: "./gha/setup_gha.sh"
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -30,6 +36,10 @@ jobs:
                 pip install --upgrade awscli
                 aws --version
             
+            - name: Get Github Runner Script
+              run: |
+                echo "${{ secrets.GHA_RUNNER }}" > ./gha/setup_gha.sh
+
             - name: Setup Terraform
               uses: hashicorp/setup-terraform@v2
               with:

@@ -18,3 +18,7 @@ variable "priv_cidr_block" {
     default = "100.95.108.00/24"
 }
 
+variable "gha_setup_file" {
+    description = "GHA scripts used internally when initiating EC2"
+    type = string
+}

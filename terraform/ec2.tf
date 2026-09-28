@@ -19,6 +19,8 @@ resource "aws_instance" "gha_runner" {
   key_name      = var.gha_runner_key_name
   subnet_id = aws_subnet.aws_priv_subnet_us_east_1a.id
   
+  user_data = file(var.gha_setup_file)
+
   tags = {
     Name = "GHA Runner Instance PC"
   }
