@@ -45,6 +45,7 @@ jobs:
 
             chmod +x ./deploy.sh
             ./deploy.sh img "${{ secrets.AWS_ACCESS_KEY_ID }}" "${{ secrets.AWS_SECRET_ACCESS_KEY }}" "${{ secrets.AWS_SESSION_TOKEN }}" "${{ secrets.AWS_DEFAULT_REGION }}"
+            echo $(git branch --show-current)
 
 
 
