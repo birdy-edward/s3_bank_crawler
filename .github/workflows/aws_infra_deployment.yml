@@ -1,0 +1,49 @@
+name : Deploy AWS Infrastructure
+
+on:
+    workflow_dispatch:
+        inputs:
+            environment:
+                description: The target AWS account
+                type: choice
+                required: true
+                default: 'nonprod'
+                options:
+                - nonprod
+                - prod
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        environment: ${{ inputs.environment }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            
+            - name: Setup Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: '3.12'
+            
+            - name: Setup AWS
+              run: |
+                pip install --upgrade awscli
+                aws --version
+            
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v2
+              with:
+                terraform_version: '1.4.0'
+                
+            - name: Terraform Installation
+              run: |
+                terraform init \
+                  -backend-config="bucket=${{ github.event.repository.name }}-${{ inputs.environment }}"\
+                  -backend-config="key=terraform.tfstate"
+                  -backend-config="region=${{ secrets.AWS_DEFAULT_REGION }}"
+            
+            - name: Terraform Plan
+              run: terraform plan
+            
+            - name: Terraform Apply
+              run: terraform apply -auto-approve

@@ -11,14 +11,11 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "unavailable-dispatch-terraform-backend"
-    key            = "terraform-backend-file.tfstate"
-    region         = "ap-southeast-2"
     encrypt        = true
   }
 }
 
 
 provider "aws" {
-region = "ap-southeast-2"
+  region = "us-east-1"
 }
