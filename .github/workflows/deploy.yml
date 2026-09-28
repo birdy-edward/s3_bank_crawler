@@ -1,0 +1,44 @@
+name: AWS S3 Uploading
+
+on:
+    workflow_dispatch:
+      inputs:
+        environment:
+          description: The target AWS account
+          type: string
+          required: true
+          default: 'nonprod'
+jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      environment: ${{ inputs.environment }}
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+        
+        - name: Setup Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.12'
+        
+        - name: Setup AWS
+          run: |
+            pip install --upgrade awscli
+            aws --version
+        
+        - name: Validate AWS credentials
+          run: |
+            if [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ] || [ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ] || [ -z "${{ secrets.AWS_SESSION_TOKEN }}" ] || [ -z "${{ secrets.AWS_DEFAULT_REGION }}" ]; then
+              echo "AWS credentials are not set in the {{ inputs.environment }} environment."
+              exit 1
+            else
+              echo "AWS credentials are set."
+            fi
+
+        - name: Crawling and uploading to S3
+          run: |
+            chmod +x ./deploy.sh
+            ./deploy img "${{ secrets.AWS_ACCESS_KEY_ID }}" "${{ secrets.AWS_SECRET_ACCESS_KEY }}" "${{ secrets.AWS_SESSION_TOKEN }}" "${{ secrets.AWS_DEFAULT_REGION }}"
+
+
+
