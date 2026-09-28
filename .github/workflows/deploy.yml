@@ -37,6 +37,11 @@ jobs:
 
         - name: Crawling and uploading to S3
           run: |
+            if [ ! -f ./deploy.sh ]; then
+              echo "deploy.sh script not found!"
+              exit 1
+            fi
+            
             chmod +x ./deploy.sh
             ./deploy img "${{ secrets.AWS_ACCESS_KEY_ID }}" "${{ secrets.AWS_SECRET_ACCESS_KEY }}" "${{ secrets.AWS_SESSION_TOKEN }}" "${{ secrets.AWS_DEFAULT_REGION }}"
 
