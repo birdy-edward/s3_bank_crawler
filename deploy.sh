@@ -55,7 +55,7 @@ echo "AWS credentials OK"
 if [ -e "$PATH_TO_CHECK" ]; then
     echo "Logos are placed in $PATH_TO_CHECK/"
     echo "Start uploading..."
-    aws s3 cp "./$PATH_TO_CHECK/" s3://ready-logistics-nonprod/play_ground --recursive
+    aws s3 cp "./$PATH_TO_CHECK/" s3://nonprod/play_ground --recursive
 else
     echo "The path has not established yet..."
 fi
