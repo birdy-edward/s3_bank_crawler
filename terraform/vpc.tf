@@ -8,8 +8,8 @@ resource "aws_vpc" "birdy_vpc" {
   enable_dns_support   = true
   
   tags = {
-    Name        = "unavailable_dispatch_vpc"
-    Environment = "Production"
+    Name        = "birdy_vpc_hehe"
+    Environment = "production"
   }
 }
 
@@ -28,6 +28,9 @@ resource "aws_subnet" "aws_priv_subnet_us_east_1a" {
     vpc_id = aws_vpc.birdy.id
     cidr_block = var.priv_cidr_block
     available_zones = "us-east-1a"
+
+    # DO NOT expose any addresses in private to Internet
+    # Every outside traffics have to go through NAT gateway placed in public subnet
     map_public_ip_on_lauche = false
     tags = {
       Name = "private_subnet"
