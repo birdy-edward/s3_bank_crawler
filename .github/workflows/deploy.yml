@@ -5,9 +5,12 @@ on:
       inputs:
         environment:
           description: The target AWS account
-          type: string
+          type: choice
           required: true
           default: 'nonprod'
+          options:
+            - nonprod
+            - prod
 jobs:
     deploy:
       runs-on: ubuntu-latest
