@@ -326,7 +326,7 @@ class Crawler():
                 r.raise_for_status()
                 for chunk in r.iter_content(chunk_size=1000):
                     if chunk:
-                        with open(f"{output_path}.json", 'ab') as f:
+                        with open(f"{output_path}/station_data.json", 'ab') as f:
                             f.write(chunk)
                             logger.info("Successfully fetched station data for station: {}".format(kwargs.get("station")))
         except Exception as e:
