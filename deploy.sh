@@ -21,7 +21,7 @@ fi
 echo "Crawling..."
 sleep 2
 echo "Waiting respond..."
-python main.py --output_path "$PATH_TO_CHECK"
+python main.py --output_path "$PATH_TO_CHECK" --event bank
 
 echo "Perhaps...Completed"
 
