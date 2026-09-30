@@ -4,15 +4,12 @@ from datetime import datetime, timedelta
 import time
 import requests as re
 
-
+chunk_size = 100
 
 parser = argparse.ArgumentParser(description="A simple script to accept arguments.")
 parser.add_argument("--output_path", type=str, help="The folder path storing images")
-
 parser.add_argument("--event", type=str, help="The event to crawl, either 'bank' or 'station'")
-
 args = parser.parse_args()
-
 stations= [data[0] for data in [[i] for i in list(set().union(*networks_dict.values()))]]
 
 if args.event == "station":
@@ -20,7 +17,7 @@ if args.event == "station":
     today = datetime.now()
     today_year = today.year
     crawler = Crawler()
-    for station in stations:
+    for i in range(0, len(stations), chunk_size):
         args_dict = {
             "start_year": today_year,
             "start_month": today.month,
@@ -28,9 +25,9 @@ if args.event == "station":
             "end_year": today_year+1,
             "end_month": today.month,
             "end_day": today.day,
-            "station": station
+            "stations": stations[i:i+chunk_size]
         }
-        time.sleep(10)
+        time.sleep(8)
         crawler.get_station_data(args.output_path, **args_dict)
 
 else:

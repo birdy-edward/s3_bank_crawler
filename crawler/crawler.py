@@ -1,3 +1,5 @@
+import time
+from datetime import datetime as dt
 import requests as re
 import logging
 import json
@@ -8,7 +10,7 @@ logger.setLevel(logging.INFO)
 
 API_URL= 'https://api.vietqr.io/v2/banks'
 
-API_URL_STATION= 'https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?data=all&tz=Etc/UTC&format=json&latlon=yes&year1={}&month1={}&day1={}&year2={}&month2={}&day2={}&station={}'
+API_URL_STATION= 'https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?data=all&tz=Etc/UTC&format=csv&latlon=yes&year1={}&month1={}&day1={}&year2={}&month2={}&day2={}&{}'
 
 networks = [
                 'AK_ASOS',
@@ -16,21 +18,21 @@ networks = [
                 'AT__ASOS',
                 'AO__ASOS',
                 'AR__ASOS'
-                # 'AQ_ASOS',
-                # 'AF__ASOS',
-                # 'AZ__ASOS',
-                # 'AS__ASOS',
-                # 'DZ__ASOS',
-                # 'AL__ASOS',
-                # 'BH__ASOS',
-                # 'AW__ASOS',
-                # 'AR_ASOS',
-                # 'AI__ASOS',
-                # 'AM__ASOS',
-                # 'AU__ASOS',
-                # 'AL_ASOS',
-                # 'AG__ASOS',
-                # 'AZ_ASOS',
+                'AQ_ASOS',
+                'AF__ASOS',
+                'AZ__ASOS',
+                'AS__ASOS',
+                'DZ__ASOS',
+                'AL__ASOS',
+                'BH__ASOS',
+                'AW__ASOS',
+                'AR_ASOS',
+                'AI__ASOS',
+                'AM__ASOS',
+                'AU__ASOS',
+                'AL_ASOS',
+                'AG__ASOS',
+                'AZ_ASOS'
                 # 'CA_AB_ASOS',
                 # 'BE__ASOS',
                 # 'BM__ASOS',
@@ -312,23 +314,40 @@ class Crawler():
                                 logger.error(f"FAILED to save image of {bank_name}"+ str(e))
                 logger.info("Saved to file successfully")
         except Exception as e:
-            logger.error("There is a found issue\n" + str(e)) 
+            logger.error("There is a found issue\n" + str(e))
+
 
     def get_station_data(self, output_path, api_url=API_URL_STATION, **kwargs):
+        today = dt.now()
         url = api_url if api_url is not None else self.api
+        station_stmt = "&".join([f"station={station}" for station in kwargs.get("stations", [])])
+
+        def cleansing_files():
+            try:
+                final = ""
+                with open(f"{output_path}/station_data_{today.strftime('%Y-%m-%d')}.csv", 'r') as f:
+                    final = [line for line in f.readlines() if not line.startswith("#DEBUG") and not line.startswith("station,valid")]
+                    final = "".join(final)
+                with open(f"{output_path}/station_data_{today.strftime('%Y-%m-%d')}.csv", 'w') as f:
+                    f.write(final)   
+            except Exception as e:
+                logger.error("An error occurred while clearing the station data file: " + str(e))
+
         logger.info("Initiating station data stream...")
+    
         try:
             with re.get(url.format(
                     kwargs.get("start_year"), kwargs.get("start_month"), kwargs.get("start_day"),
                     kwargs.get("end_year"), kwargs.get("end_month"), kwargs.get("end_day"),
-                    kwargs.get("station")
+                    station_stmt
                 ), timeout=10, stream=True) as r:
                 r.raise_for_status()
                 for chunk in r.iter_content(chunk_size=1000):
                     if chunk:
-                        with open(f"{output_path}/station_data.json", 'ab') as f:
+                        with open(f"{output_path}/station_data_{today.strftime('%Y-%m-%d')}.csv", 'ab') as f:
                             f.write(chunk)
                             logger.info("Successfully fetched station data for station: {}".format(kwargs.get("station")))
+            cleansing_files()
         except Exception as e:
             logger.error("An error occurred while fetching station data: " + str(e))
         
