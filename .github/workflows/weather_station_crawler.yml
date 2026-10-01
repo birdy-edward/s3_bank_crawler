@@ -81,8 +81,7 @@ jobs:
                 echo "Collecting data..."
                 python ./main.py --output_path ${{ env.OUTPUT_PATH }} --event "station"
                 sleep 20
-                git checkout main
-                git add ./data
+                git add .
                 git commit -m "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
                 git push --set-upstream origin "upload_weather_date_$CURRENT_DATE"
                 
