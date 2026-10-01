@@ -60,7 +60,7 @@ jobs:
             
             - name: Get current date
               run: |
-                CURRENT_DATE=$(date)
+                CURRENT_DATE=$(date '+%Y_%m_%d')
                 if [ -d "${{ env.OUTPUT_PATH }}" ]; then
                     echo "Directory exists."
                 else
