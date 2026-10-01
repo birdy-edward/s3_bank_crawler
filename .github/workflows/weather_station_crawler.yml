@@ -44,9 +44,6 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
-              with:
-                ref: 'main'
-                token: ${{ secrets.GITHUB_TOKEN }}
             
             - name: Setup Python
               uses: actions/setup-python@v4
@@ -61,6 +58,7 @@ jobs:
             - name: Get current date
               run: |
                 CURRENT_DATE=$(date '+%Y_%m_%d')
+                echo "CURRENT_DATE=$CURRENT_DATE" >> $GITHUB_ENV
                 if [ -d "${{ env.OUTPUT_PATH }}" ]; then
                     echo "Directory exists."
                 else
