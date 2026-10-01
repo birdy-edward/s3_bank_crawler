@@ -15,6 +15,7 @@ on:
 
 env:
     OUTPUT_PATH: ${{ github.event.inputs.output_path }}
+    GITHUB_TOKEN: ${{ secrets.GH_RUNNER }}
 
 jobs:
     setup:
