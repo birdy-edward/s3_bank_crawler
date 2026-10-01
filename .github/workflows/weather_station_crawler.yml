@@ -72,6 +72,7 @@ jobs:
               run: |
                 git config --global user.name "${{ vars.name }}"
                 git config --global user.email "${{ vars.email }}"
+                git checkout -b upload_weather_date_$CURRENT_DATE
             
             - name: Collecting data           
               run: |
@@ -81,6 +82,6 @@ jobs:
                 git checkout main
                 git add ./data
                 git commit -m "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
-                git push origin main
+                git push --set-upstream origin upload_weather_date_$CURRENT_DATE
 
 
