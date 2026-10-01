@@ -11,15 +11,38 @@ on:
                 required: true
                 default: "./data/weather"
 jobs:
-    crawl:
+    setup:
         name: Crawl Weather Data
         runs-on: ubuntu-latest
-        permissions:
-            contents: write
-            issues: write
         env:
             OUTPUT_PATH: ${{ github.event.inputs.output_path }}
-            GHE_TOKEN: ${{ secrets.GHE_TOKEN }}
+        outputs:
+            TRIGGER: ${{ steps.find_files.outputs.TRIGGER }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            
+            - name: Find files
+              id: find_files
+              run: |
+                if [ -e "${{ env.OUTPUT_PATH }}" ]; then
+                    echo "Directory exists."
+                else
+                    echo "Directory does not exist. Creating directory..."
+                    mkdir -p ${{ env.OUTPUT_PATH }}
+                fi
+
+                if [ -f ./main.py ]; then
+                    echo "File does not exists."
+                else
+                    echo "TRIGGER=True" >> $GITHUB_OUTPUT
+    crawl:
+        name: Collect Weather Data       
+        runs-on: ubuntu-latest
+        needs: setup
+        if: needs.setup.outputs.TRIGGER == 'True'
+        env:
+            OUTPUT_PATH: ${{ github.event.inputs.output_path }}
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -36,15 +59,5 @@ jobs:
             
             - name: Get current date
               run: CURRENT_DATE=$(date)
-            
-            - name: Collecting data
-              run: |
-                echo "Collecting data..."
-                python crawler/crawler.py --output_path ${{ env.OUTPUT_PATH }} --event "station"
-                sleep 300
-                git checkout main
-                git add ./data
-                git commit -m "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
-                git push origin main
 
 

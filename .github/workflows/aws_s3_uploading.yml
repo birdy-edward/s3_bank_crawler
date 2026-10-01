@@ -31,6 +31,6 @@ jobs:
         - name: Collecting data
           run: |
             echo "Collecting data..."
-            python crawler/crawler.py --output_path ./output
+            python ./main.py --output_path ./output --event "bank"
         
 
