@@ -105,7 +105,7 @@ jobs:
               with:
                 token: ${{ secrets.GH_RUNNER }}
                 commit-message: ${{ env.message }}
-                title: "CRAWLING $CURRENT_DATE: Up-to-date weather data"
+                title: ${{ env.message }}
                 body: "This pull request contains the latest weather data collected on $CURRENT_DATE."
                 base: main
                 branch: ${{ env.branch_name }}
