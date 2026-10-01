@@ -85,7 +85,8 @@ jobs:
                 git config --global user.name "${{ vars.name }}"
                 git config --global user.email "${{ vars.email }}"
                 git checkout -b "upload_weather_date_$CURRENT_DATE"
-                echo 'branch_name=$(git rev-parse --abbrev-ref HEAD)' >> $GITHUB_ENV
+                branch_name=$(git rev-parse --abbrev-ref HEAD)
+                echo "branch_name=$branch_name" >> $GITHUB_ENV
             
             - name: Collecting data
               id: collect_data        
@@ -96,7 +97,8 @@ jobs:
                 git add ./data/weather
                 git commit -m "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
                 git push --set-upstream origin "upload_weather_date_$CURRENT_DATE"
-                echo 'message=CRAWLING $$(date '+%Y_%m_%d'): Up-to-date weather data' >> $GITHUB_ENV
+                messaege="CRAWLING $CURRENT_DATE: Up-to-date weather data"
+                echo "message=$message" >> $GITHUB_ENV
 
                 
 
