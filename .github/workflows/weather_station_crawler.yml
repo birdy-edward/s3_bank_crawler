@@ -80,7 +80,8 @@ jobs:
                 git config --global user.email "${{ vars.email }}"
                 git checkout -b "upload_weather_date_$CURRENT_DATE"
             
-            - name: Collecting data           
+            - name: Collecting data
+              id: collect_data        
               run: |
                 echo "Collecting data..."
                 python ./main.py --output_path ${{ env.OUTPUT_PATH }} --event "station"
@@ -88,12 +89,13 @@ jobs:
                 git add ./data/weather
                 git commit -m "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
                 git push --set-upstream origin "upload_weather_date_$CURRENT_DATE"
-                
+                echo "message=CRAWLING $CURRENT_DATE: Up-to-date weather data" >> $GITHUB_OUTPUT
+
             - name: Create Pull Request
               uses: peter-evans/create-pull-request@v5
               with:
                 token: ${{ secrets.GH_RUNNER }}
-                commit-message: "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
+                commit-message: ${{ steps.collect_data.outputs.message }}
                 title: "CRAWLING $CURRENT_DATE: Up-to-date weather data"
                 body: "This pull request contains the latest weather data collected on $CURRENT_DATE."
                 base: main
