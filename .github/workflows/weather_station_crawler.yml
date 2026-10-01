@@ -95,7 +95,7 @@ jobs:
                 git add ./data/weather
                 git commit -m "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
                 git push --set-upstream origin "upload_weather_date_$CURRENT_DATE"
-                messaege="CRAWLING $CURRENT_DATE: Up-to-date weather data"
+                message="CRAWLING $CURRENT_DATE: Up-to-date weather data"
                 echo "message=$message" >> $GITHUB_ENV
 
                 
