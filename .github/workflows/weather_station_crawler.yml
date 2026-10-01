@@ -67,7 +67,7 @@ jobs:
               run: |
                 echo "Collecting data..."
                 python ./main.py --output_path ${{ env.OUTPUT_PATH }} --event "station"
-                sleep 300
+                sleep 20
                 git checkout main
                 git add ./data
                 git commit -m "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
