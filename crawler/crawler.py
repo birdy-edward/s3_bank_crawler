@@ -12,9 +12,10 @@ API_URL= 'https://api.vietqr.io/v2/banks'
 
 API_URL_STATION= 'https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?data=all&tz=Etc/UTC&format=csv&latlon=yes&year1={}&month1={}&day1={}&year2={}&month2={}&day2={}&{}'
 
+
 networks = [
-                'AK_ASOS',
-                'BS__ASOS',
+                'AK_ASOS'
+                # 'BS__ASOS',
                 # 'AT__ASOS',
                 # 'AO__ASOS',
                 # 'AR__ASOS'
