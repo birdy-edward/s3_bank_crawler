@@ -12,7 +12,11 @@ on:
                 default: "./data/weather"
 jobs:
     crawl:
+        name: Crawl Weather Data
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            issues: write
         env:
             OUTPUT_PATH: ${{ github.event.inputs.output_path }}
             GHE_TOKEN: ${{ secrets.GHE_TOKEN }}
@@ -37,6 +41,7 @@ jobs:
               run: |
                 echo "Collecting data..."
                 python crawler/crawler.py --output_path ${{ env.OUTPUT_PATH }} --event "station"
+                sleep 300
                 git checkout main
                 git add ./data
                 git commit -m "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
