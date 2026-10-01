@@ -70,9 +70,10 @@ jobs:
 
             - name: Set up Git
               run: |
+                echo $CURRENT_DATE
                 git config --global user.name "${{ vars.name }}"
                 git config --global user.email "${{ vars.email }}"
-                git checkout -b upload_weather_date_$CURRENT_DATE
+                git checkout -b "upload_weather_date_$CURRENT_DATE"
             
             - name: Collecting data           
               run: |
@@ -82,6 +83,16 @@ jobs:
                 git checkout main
                 git add ./data
                 git commit -m "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
-                git push --set-upstream origin upload_weather_date_$CURRENT_DATE
+                git push --set-upstream origin "upload_weather_date_$CURRENT_DATE"
+                
+            - name: Create Pull Request
+              uses: peter-evans/create-pull-request@v5
+              with:
+                token: ${{ secrets.GH_RUNNER }}
+                commit-message: "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
+                title: "CRAWLING $CURRENT_DATE: Up-to-date weather data..."
+                body: "This pull request contains the latest weather data collected on $CURRENT_DATE."
+                base: main
+                branch: upload_weather_date_$CURRENT_DATE
 
 
