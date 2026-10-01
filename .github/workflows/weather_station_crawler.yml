@@ -25,13 +25,6 @@ jobs:
             - name: Find files
               id: find_files
               run: |
-                if [ -e "${{ env.OUTPUT_PATH }}" ]; then
-                    echo "Directory exists."
-                else
-                    echo "Directory does not exist. Creating directory..."
-                    mkdir -p ${{ env.OUTPUT_PATH }}
-                fi
-
                 if [ -f main.py ]; then
                     echo "File exists."
                     echo "TRIGGER=True" >> $GITHUB_OUTPUT
@@ -61,7 +54,14 @@ jobs:
                 pip install -r requirements.txt
             
             - name: Get current date
-              run: CURRENT_DATE=$(date)
+              run: |
+                CURRENT_DATE=$(date)
+                if [ -d "${{ env.OUTPUT_PATH }}" ]; then
+                    echo "Directory exists."
+                else
+                    echo "Directory does not exist. Creating directory..."
+                    mkdir -p ${{ env.OUTPUT_PATH }}
+                fi
             
             - name: Collecting data           
               run: |
