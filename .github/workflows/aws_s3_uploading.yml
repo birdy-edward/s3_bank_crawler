@@ -14,7 +14,6 @@ on:
 jobs:
     deploy:
       runs-on: ubuntu-latest
-      environment: ${{ inputs.environment }}
       steps:
         - name: Checkout code
           uses: actions/checkout@v4
@@ -24,31 +23,14 @@ jobs:
           with:
             python-version: '3.12'
         
-        - name: Setup AWS
+        - name: Install dependencies
           run: |
-            pip install --upgrade awscli
-            aws --version
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
         
-        - name: Validate AWS credentials
+        - name: Collecting data
           run: |
-            if [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ] || [ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ] || [ -z "${{ secrets.AWS_SESSION_TOKEN }}" ] || [ -z "${{ secrets.AWS_DEFAULT_REGION }}" ]; then
-              echo "AWS credentials are not set in the {{ inputs.environment }} environment."
-              exit 1
-            else
-              echo "AWS credentials are set."
-            fi
-
-        - name: Crawling and uploading to S3
-          run: |
-            if [ ! -f ./deploy.sh ]; then
-              echo "deploy.sh script not found!"
-              exit 1
-            fi
-
-
-            chmod +x ./deploy.sh
-            ./deploy.sh img "${{ secrets.AWS_ACCESS_KEY_ID }}" "${{ secrets.AWS_SECRET_ACCESS_KEY }}" "${{ secrets.AWS_SESSION_TOKEN }}" "${{ secrets.AWS_DEFAULT_REGION }}"
-            echo $(git branch --show-current)
-
-
+            echo "Collecting data..."
+            python crawler/crawler.py --output_path ./output
+        
 

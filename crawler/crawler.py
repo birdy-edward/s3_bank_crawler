@@ -322,17 +322,6 @@ class Crawler():
         url = api_url if api_url is not None else self.api
         station_stmt = "&".join([f"station={station}" for station in kwargs.get("stations", [])])
 
-        def cleansing_files():
-            try:
-                final = ""
-                with open(f"{output_path}/station_data_{today.strftime('%Y-%m-%d')}.csv", 'r') as f:
-                    final = [line for line in f.readlines() if not line.startswith("#DEBUG") and not line.startswith("station,valid")]
-                    final = "".join(final)
-                with open(f"{output_path}/station_data_{today.strftime('%Y-%m-%d')}.csv", 'w') as f:
-                    f.write(final)   
-            except Exception as e:
-                logger.error("An error occurred while clearing the station data file: " + str(e))
-
         logger.info("Initiating station data stream...")
     
         try:
@@ -347,7 +336,6 @@ class Crawler():
                         with open(f"{output_path}/station_data_{today.strftime('%Y-%m-%d')}.csv", 'ab') as f:
                             f.write(chunk)
                             logger.info("Successfully fetched station data for station: {}".format(kwargs.get("station")))
-            cleansing_files()
         except Exception as e:
             logger.error("An error occurred while fetching station data: " + str(e))
         
