@@ -97,7 +97,6 @@ jobs:
                 title: "CRAWLING $CURRENT_DATE: Up-to-date weather data"
                 body: "This pull request contains the latest weather data collected on $CURRENT_DATE."
                 base: main
-                author: ${{ vars.email }}
                 branch: upload_weather_date_$CURRENT_DATE
 
 
