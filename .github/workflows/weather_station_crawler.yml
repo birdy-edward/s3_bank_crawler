@@ -10,11 +10,17 @@ on:
                 type: string
                 required: true
                 default: "./data/weather"
+            limit_api_calls:
+                description: The maximum number of API calls to make
+                type: number
+                required: true
+                default: 10
 
 
 
 env:
     OUTPUT_PATH: ${{ github.event.inputs.output_path }}
+    LIMIT: ${{ github.event.inputs.limit_api_calls }}
     GITHUB_TOKEN: ${{ secrets.GH_RUNNER }}
 
 jobs:
