@@ -2,7 +2,7 @@ name: Weather Crawler
 
 on:
     schedule:
-        - cron: '0 0 * * *' # Runs every day at midnight
+        - cron: '0 0 * * *'
     workflow_dispatch:
         inputs:
             output_path:
@@ -15,8 +15,6 @@ on:
                 type: number
                 required: true
                 default: 10
-
-
 
 env:
     OUTPUT_PATH: ${{ github.event.inputs.output_path }}
