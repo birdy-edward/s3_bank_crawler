@@ -18,7 +18,7 @@ on:
 
 env:
     OUTPUT_PATH: ${{ github.event.inputs.output_path || './data/weather' }}
-    LIMIT: ${{ github.event.inputs.limit_api_calls }}
+    LIMIT: ${{ github.event.inputs.limit_api_calls || 0 }}
     GITHUB_TOKEN: ${{ secrets.GH_RUNNER }}
 
 jobs:
