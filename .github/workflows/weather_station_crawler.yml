@@ -83,12 +83,8 @@ jobs:
                 git config --global user.email "${{ vars.email }}"
                 branch_name="upload_weather_date_$CURRENT_DATE"
                 git fetch origin
-                if git ls-remote --exit-code --heads origin "$branch_name" >/dev/null; then
-                    git fetch origin "$branch_name"
-                    git checkout -B "$branch_name" FETCH_HEAD
-                else
-                    git checkout -b "$branch_name" main
-                fi
+                git checkout main
+                git checkout -b "$branch_name"
                 echo "branch_name=$branch_name" >> $GITHUB_ENV
             
             - name: Collecting data
@@ -98,10 +94,6 @@ jobs:
                 echo "Collecting data..."
                 python ./main.py --output_path "$OUTPUT_PATH" --event "station"
                 git add -- "$OUTPUT_PATH"
-                if git diff --cached --quiet; then
-                    echo "No weather data changes were generated; refusing to push an empty commit." >&2
-                    exit 1
-                fi
                 message="CRAWLING $CURRENT_DATE: Up-to-date weather data"
                 echo "message=$message" >> $GITHUB_ENV
                 git commit -m "$message"
