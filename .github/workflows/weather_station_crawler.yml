@@ -84,30 +84,30 @@ jobs:
                 branch_name="upload_weather_date_$CURRENT_DATE"
                 git fetch origin
                 git checkout main
-                git checkout -b "$branch_name"
-                echo "branch_name=$branch_name" >> $GITHUB_ENV
+                git pull origin main
+                # git checkout -b "$branch_name"
+                # echo "branch_name=$branch_name" >> $GITHUB_ENV
             
             - name: Collecting data
               id: collect_data        
               run: |
-                set -euo pipefail
                 echo "Collecting data..."
                 python ./main.py --output_path "$OUTPUT_PATH" --event "station"
                 git add -- "$OUTPUT_PATH"
                 message="CRAWLING $CURRENT_DATE: Up-to-date weather data"
                 echo "message=$message" >> $GITHUB_ENV
                 git commit -m "$message"
-                git push --set-upstream origin "$branch_name"
+                git push -u origin main
                 
 
                 
 
-            - name: Create Pull Request
-              uses: peter-evans/create-pull-request@v5
-              with:
-                token: ${{ secrets.GH_RUNNER }}
-                commit-message: ${{ env.message }}
-                title: ${{ env.message }}
-                body: "This pull request contains the latest weather data collected on $CURRENT_DATE."
-                base: main
-                branch: ${{ env.branch_name }}
+            # - name: Create Pull Request
+            #   uses: peter-evans/create-pull-request@v5
+            #   with:
+            #     token: ${{ secrets.GH_RUNNER }}
+            #     commit-message: ${{ env.message }}
+            #     title: ${{ env.message }}
+            #     body: "This pull request contains the latest weather data collected on $CURRENT_DATE."
+            #     base: main
+            #     branch: ${{ env.branch_name }}
