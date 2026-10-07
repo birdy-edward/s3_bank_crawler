@@ -11,9 +11,18 @@ on:
           options:
             - nonprod
             - prod
+
+
+    
 jobs:
     deploy:
       runs-on: ubuntu-latest
+      environment: ${{ inputs.environment }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
       steps:
         - name: Checkout code
           uses: actions/checkout@v4
@@ -31,6 +40,6 @@ jobs:
         - name: Collecting data
           run: |
             echo "Collecting data..."
-            python ./main.py --output_path ./output --event "bank"
-        
+            chmod +x ./deploy.sh
+            ./deploy.sh img $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY $AWS_SESSION_TOKEN $AWS_DEFAULT_REGION
 
