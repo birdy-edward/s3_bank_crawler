@@ -13,7 +13,7 @@ API_URL= 'https://api.vietqr.io/v2/banks'
 
 API_URL_STATION= 'https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?data=all&tz=Etc/UTC&format=csv&latlon=yes&year1={}&month1={}&day1={}&year2={}&month2={}&day2={}&{}'
 
-limit = int(os.environ.get("LIMIT", -1))
+limit = int(os.environ.get("LIMIT", 10))
 
 networks = [
                 'AK_ASOS',
@@ -281,7 +281,7 @@ networks = [
                 'UT_ASOS',
                 'TN__ASOS'
 ]
-
+logger.info("Total networks to fetch: " + str(limit))
 if limit > 0:
     networks = networks[:limit]
 
