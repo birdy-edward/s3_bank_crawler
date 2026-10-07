@@ -92,13 +92,14 @@ jobs:
               run: |
                 echo "Collecting data..."
                 git checkout "upload_weather_date_$CURRENT_DATE"
+                git push --set-upstream origin "upload_weather_date_$CURRENT_DATE"
                 python ./main.py --output_path ${{ env.OUTPUT_PATH }} --event "station"
                 sleep 20
                 git add .
                 message="CRAWLING $CURRENT_DATE: Up-to-date weather data"
                 echo "message=$message" >> $GITHUB_ENV
                 git commit -m "CRAWLING $CURRENT_DATE: Up-to-date weather data"
-                git push --set-upstream origin "upload_weather_date_$CURRENT_DATE"
+                git push
                 
 
                 
